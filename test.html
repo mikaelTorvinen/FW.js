@@ -1,0 +1,56 @@
+<html>
+    <body>
+        <p>Hi!</p>
+        
+        <div id="rootElement">
+        
+        </div>
+        
+        <script src="fw_min.js"></script>
+        <script>
+        
+            FW.addService("rootService",[],function(deps){
+                var API={};
+                var count=0;
+                API.getCount=function(){
+                    return count++;
+                }
+                console.log("root service initialized!");
+                return API;
+            });
+        
+        
+            FW.addService("demoService",["rootService"],function(deps){
+                var API={};
+                API.getTime=function(){
+                    return new Date().toISOString();
+                }
+                console.log("demo service initialized!");
+                return API;
+            });
+            
+            FW.addController("demoModule",["demoService"],function(elm,deps){
+                elm.innerHTML="HELLO WORLD? <br/> Sub modules:";
+                
+                for(var i=0; i<10; i++){
+                    var subElm=document.createElement("DIV");
+                    elm.appendChild(subElm);
+                    FW.initController("demoModule2",subElm)(deps.demoService.getTime());
+                }
+                
+                console.log("demo module initialized!");
+            });
+            
+            FW.addController("demoModule2",["rootService"],function(elm,deps){
+                elm.innerHTML="Hola! "+deps.rootService.getCount();
+                return function(text){
+                     elm.innerHTML+=" "+text;
+                }
+            });
+            
+            console.log("Initializing demo module...");
+            FW.initController("demoModule",document.getElementById("rootElement"));
+            
+        </script>
+    </body>
+</html>
