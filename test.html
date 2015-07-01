@@ -7,6 +7,7 @@
         </div>
         
         <script src="fw_min.js"></script>
+        <script src="fw_services.js"></script>
         <script>
         
             FW.addService("rootService",[],function(deps){
@@ -41,10 +42,23 @@
                 console.log("demo module initialized!");
             });
             
-            FW.addController("demoModule2",["rootService"],function(elm,deps){
-                elm.innerHTML="Hola! "+deps.rootService.getCount();
-                return function(text){
-                     elm.innerHTML+=" "+text;
+            FW.addController("demoModule2",["FW_templateCache"],function(elm,deps){ 
+                var template;
+                var text;
+                deps.FW_templateCache.load("./templates/template.html",function(temlp){
+                    template=temlp;
+                    render();
+                });
+                
+                function render(){
+                    if(template && text){
+                        elm.innerHTML=template+text;
+                    }
+                };
+                
+                return function(txt){
+                     text=txt;
+                     render();
                 }
             });
             

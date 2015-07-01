@@ -14,7 +14,7 @@ FW.addService("FW_templateCache",[],function(deps){
             req.responseType="text";
             req.onreadystatechange=function(){
                 if(req.readyState==4 && req.status==200){
-                    cache[url]=XMLHttpRequest.responseText;
+                    cache[url]=req.responseText;
                     handler.call(null,cache[url]);
                 }
             }
